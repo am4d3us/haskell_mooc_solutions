@@ -96,7 +96,11 @@ isPalindrome str = str == reverse str
 --   palindromify "abracacabra" ==> "acaca"
 
 palindromify :: String -> String
-palindromify s = todo
+palindromify "" = ""
+palindromify s | s == reversed = s
+               | otherwise = palindromify $ drop 1 $ take (size - 1) s
+  where reversed = reverse s
+        size = length s
 
 ------------------------------------------------------------------------------
 -- Ex 7: implement safe integer division, that is, a function that
@@ -109,7 +113,8 @@ palindromify s = todo
 --   safeDiv 4 0  ==> Nothing
 
 safeDiv :: Integer -> Integer -> Maybe Integer
-safeDiv x y = todo
+safeDiv _ 0 = Nothing
+safeDiv x y = Just (div x y)
 
 ------------------------------------------------------------------------------
 -- Ex 8: implement a function greet that greets a person given a first
@@ -121,7 +126,10 @@ safeDiv x y = todo
 --   greet "John" (Just "Smith")  ==> "Hello, John Smith!"
 
 greet :: String -> Maybe String -> String
-greet first last = todo
+greet first last = case last of
+  Nothing -> greet' first
+  Just inner -> greet' (first ++ " " ++ inner)
+  where greet' name = "Hello, " ++ name ++ "!"
 
 ------------------------------------------------------------------------------
 -- Ex 9: safe list indexing. Define a function safeIndex so that
@@ -137,7 +145,9 @@ greet first last = todo
 --   safeIndex ["a","b","c"] (-1)  ==> Nothing
 
 safeIndex :: [a] -> Int -> Maybe a
-safeIndex xs i = todo
+safeIndex xs i = if safeIndex' i then Just (xs !! i)
+                 else Nothing
+  where safeIndex' index = (0 <= index) && (index < length xs)
 
 ------------------------------------------------------------------------------
 -- Ex 10: another variant of safe division. This time you should use
@@ -148,7 +158,8 @@ safeIndex xs i = todo
 --   eitherDiv 4 0   ==> Left "4/0"
 
 eitherDiv :: Integer -> Integer -> Either String Integer
-eitherDiv x y = todo
+eitherDiv x 0 = Left $ show x ++ "/0"
+eitherDiv x y = Right $ div x y
 
 ------------------------------------------------------------------------------
 -- Ex 11: implement the function addEithers, which combines two values of type
@@ -165,4 +176,6 @@ eitherDiv x y = todo
 --   addEithers (Left "boom") (Left "fail") ==> Left "boom"
 
 addEithers :: Either String Int -> Either String Int -> Either String Int
-addEithers a b = todo
+addEithers (Right x) (Right y) = Right $ x + y
+addEithers (Left x) _ = Left x
+addEithers _ (Left y) = Left y
