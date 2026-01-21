@@ -13,8 +13,8 @@
 module Set2a where
 
 -- Some imports you'll need. Don't add other imports :)
-import Data.List
-import Mooc.Todo
+import           Data.List
+import           Mooc.Todo
 
 ------------------------------------------------------------------------------
 -- Ex 1: Define the constant years, that is a list of the values 1982,
@@ -33,9 +33,9 @@ years = [1982, 2004, 2020]
 
 takeFinal :: Int -> [a] -> [a]
 takeFinal n xs =
-  if size < n
-    then xs
-    else drop (size - n) xs
+    if size < n
+        then xs
+        else drop (size - n) xs
   where
     size = length xs
 
@@ -97,10 +97,12 @@ isPalindrome str = str == reverse str
 
 palindromify :: String -> String
 palindromify "" = ""
-palindromify s | s == reversed = s
-               | otherwise = palindromify $ drop 1 $ take (size - 1) s
-  where reversed = reverse s
-        size = length s
+palindromify s
+    | s == reversed = s
+    | otherwise = palindromify $ drop 1 $ take (size - 1) s
+  where
+    reversed = reverse s
+    size = length s
 
 ------------------------------------------------------------------------------
 -- Ex 7: implement safe integer division, that is, a function that
@@ -127,9 +129,10 @@ safeDiv x y = Just (div x y)
 
 greet :: String -> Maybe String -> String
 greet first last = case last of
-  Nothing -> greet' first
-  Just inner -> greet' (first ++ " " ++ inner)
-  where greet' name = "Hello, " ++ name ++ "!"
+    Nothing    -> greet' first
+    Just inner -> greet' (first ++ " " ++ inner)
+  where
+    greet' name = "Hello, " ++ name ++ "!"
 
 ------------------------------------------------------------------------------
 -- Ex 9: safe list indexing. Define a function safeIndex so that
@@ -145,9 +148,12 @@ greet first last = case last of
 --   safeIndex ["a","b","c"] (-1)  ==> Nothing
 
 safeIndex :: [a] -> Int -> Maybe a
-safeIndex xs i = if safeIndex' i then Just (xs !! i)
-                 else Nothing
-  where safeIndex' index = (0 <= index) && (index < length xs)
+safeIndex xs i =
+    if safeIndex' i
+        then Just (xs !! i)
+        else Nothing
+  where
+    safeIndex' index = (0 <= index) && (index < length xs)
 
 ------------------------------------------------------------------------------
 -- Ex 10: another variant of safe division. This time you should use
@@ -177,5 +183,5 @@ eitherDiv x y = Right $ div x y
 
 addEithers :: Either String Int -> Either String Int -> Either String Int
 addEithers (Right x) (Right y) = Right $ x + y
-addEithers (Left x) _ = Left x
-addEithers _ (Left y) = Left y
+addEithers (Left x) _          = Left x
+addEithers _ (Left y)          = Left y
