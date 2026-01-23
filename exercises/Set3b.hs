@@ -122,7 +122,11 @@ sorted (x1 : x2 : xs) = x1 <= x2 && sorted (x2 : xs)
 -- Use pattern matching and recursion (and the list constructors : and [])
 
 sumsOf :: [Int] -> [Int]
-sumsOf xs = todo
+sumsOf xs = sumsOf' xs 0
+  where
+    sumsOf' [] _            = []
+    sumsOf' (x : []) to_add = [x + to_add]
+    sumsOf' (x : xs) to_add = (x + to_add) : sumsOf' xs (x + to_add)
 
 ------------------------------------------------------------------------------
 -- Ex 7: implement the function merge that merges two sorted lists of
@@ -137,7 +141,11 @@ sumsOf xs = todo
 --   merge [1] [2,3,4,5,6] ==> [1,2,3,4,5,6]
 
 merge :: [Int] -> [Int] -> [Int]
-merge xs ys = todo
+merge xs [] = xs
+merge [] ys = ys
+merge l1@(x : xs) l2@(y : ys)
+    | x <= y = x : merge xs l2
+    | otherwise = y : merge l1 ys
 
 ------------------------------------------------------------------------------
 -- Ex 8: compute the biggest element, using a comparison function
@@ -165,7 +173,10 @@ merge xs ys = todo
 --     ==> ("Mouse",8)
 
 mymaximum :: (a -> a -> Bool) -> a -> [a] -> a
-mymaximum bigger initial xs = todo
+mymaximum _ initial [] = initial
+mymaximum bigger initial (x : xs)
+    | bigger x initial = mymaximum bigger x xs
+    | otherwise = mymaximum bigger initial xs
 
 ------------------------------------------------------------------------------
 -- Ex 9: define a version of map that takes a two-argument function
@@ -179,7 +190,9 @@ mymaximum bigger initial xs = todo
 -- Use recursion and pattern matching. Do not use any library functions.
 
 map2 :: (a -> b -> c) -> [a] -> [b] -> [c]
-map2 f as bs = todo
+map2 _ as []             = []
+map2 _ [] bs             = []
+map2 f (a : as) (b : bs) = f a b : map2 f as bs
 
 ------------------------------------------------------------------------------
 -- Ex 10: implement the function maybeMap, which works a bit like a
@@ -203,4 +216,7 @@ map2 f as bs = todo
 --   ==> []
 
 maybeMap :: (a -> Maybe b) -> [a] -> [b]
-maybeMap f xs = todo
+maybeMap _ [] = []
+maybeMap f (x : xs) = case f x of
+    Just r  -> r : maybeMap f xs
+    Nothing -> maybeMap f xs
